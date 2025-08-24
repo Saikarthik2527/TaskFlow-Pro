@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow Pro - Professional Task Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <i class="fas fa-tasks"></i>
+                <span>TaskFlow Pro</span>
+            </div>
+        </div>
+        
+        <div class="header-center">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search tasks..." class="search-input">
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="profile-avatar">
+                <img src="https://via.placeholder.com/40x40/6366f1/ffffff?text=U" alt="Profile" class="avatar">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Categories</h3>
+                <button class="add-category-btn" id="addCategoryBtn">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="category-list" id="categoryList">
+                    <li class="category-item active" data-category="all">
+                        <i class="fas fa-home"></i>
+                        <span>All Tasks</span>
+                    </li>
+                    <li class="category-item" data-category="work">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Work</span>
+                    </li>
+                    <li class="category-item" data-category="personal">
+                        <i class="fas fa-user"></i>
+                        <span>Personal</span>
+                    </li>
+                    <li class="category-item" data-category="study">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Study</span>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="settings-btn">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Kanban Board -->
+            <div class="kanban-board" id="kanbanBoard">
+                <div class="kanban-column" data-status="todo">
+                    <div class="column-header">
+                        <h3>To Do</h3>
+                        <span class="task-count" id="todoCount">0</span>
+                    </div>
+                    <div class="task-list" id="todoList">
+                        <!-- Tasks will be added here -->
+                    </div>
+                </div>
+                
+                <div class="kanban-column" data-status="in-progress">
+                    <div class="column-header">
+                        <h3>In Progress</h3>
+                        <span class="task-count" id="inProgressCount">0</span>
+                    </div>
+                    <div class="task-list" id="inProgressList">
+                        <!-- Tasks will be added here -->
+                    </div>
+                </div>
+                
+                <div class="kanban-column" data-status="done">
+                    <div class="column-header">
+                        <h3>Done</h3>
+                        <span class="task-count" id="doneCount">0</span>
+                    </div>
+                    <div class="task-list" id="doneList">
+                        <!-- Tasks will be added here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar (Analytics) -->
+        <aside class="analytics-sidebar">
+            <div class="analytics-header">
+                <h3>Analytics</h3>
+            </div>
+            
+            <div class="analytics-content">
+                <div class="stats-card">
+                    <h4>Today's Progress</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="todayProgress"></div>
+                    </div>
+                    <span class="progress-text" id="todayProgressText">0%</span>
+                </div>
+                
+                <div class="stats-card">
+                    <h4>This Week</h4>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number" id="weekCompleted">0</span>
+                            <span class="stat-label">Completed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="weekTotal">0</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h4>Tasks by Category</h4>
+                    <canvas id="categoryChart" width="200" height="200"></canvas>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="fab">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Add/Edit Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Task</h2>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="taskForm" class="task-form">
+                <div class="form-group">
+                    <label for="taskTitle">Title</label>
+                    <input type="text" id="taskTitle" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" name="description" rows="3"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskPriority">Priority</label>
+                        <select id="taskPriority" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskCategory">Category</label>
+                        <select id="taskCategory" name="category">
+                            <option value="work">Work</option>
+                            <option value="personal">Personal</option>
+                            <option value="study">Study</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDueDate">Due Date</label>
+                        <input type="datetime-local" id="taskDueDate" name="dueDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskRecurring">Recurring</label>
+                        <select id="taskRecurring" name="recurring">
+                            <option value="none">None</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="voiceInputBtn">
+                        <i class="fas fa-microphone"></i> Voice Input
+                    </button>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Category</h2>
+                <button class="close-btn" id="closeCategoryModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="categoryForm" class="category-form">
+                <div class="form-group">
+                    <label for="categoryName">Category Name</label>
+                    <input type="text" id="categoryName" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoryIcon">Icon</label>
+                    <select id="categoryIcon" name="icon">
+                        <option value="fas fa-briefcase">Briefcase</option>
+                        <option value="fas fa-home">Home</option>
+                        <option value="fas fa-graduation-cap">Graduation Cap</option>
+                        <option value="fas fa-heart">Heart</option>
+                        <option value="fas fa-code">Code</option>
+                        <option value="fas fa-palette">Palette</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Theme Selector Modal -->
+    <div class="modal" id="themeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Choose Theme</h2>
+                <button class="close-btn" id="closeThemeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="theme-options">
+                <div class="theme-option" data-theme="midnight">
+                    <div class="theme-preview midnight-preview"></div>
+                    <span>Midnight Blue</span>
+                </div>
+                <div class="theme-option" data-theme="mint">
+                    <div class="theme-preview mint-preview"></div>
+                    <span>Mint Green</span>
+                </div>
+                <div class="theme-option" data-theme="orange">
+                    <div class="theme-preview orange-preview"></div>
+                    <span>Orange & Black</span>
+                </div>
+                <div class="theme-option" data-theme="pastel">
+                    <div class="theme-preview pastel-preview"></div>
+                    <span>Pastel</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
