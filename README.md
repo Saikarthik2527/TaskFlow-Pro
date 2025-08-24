@@ -65,6 +65,9 @@ A feature-rich, enterprise-grade task management system built with vanilla HTML,
 - **Optimized Rendering**: Efficient DOM updates and re-renders
 - **Memory Management**: Proper cleanup and resource management
 
+- <img width="1854" height="889" alt="image" src="https://github.com/user-attachments/assets/b6e0b336-5068-4e1f-b1fa-33e1623f4992" />
+
+
 ## 🛠️ Technical Implementation
 
 ### Frontend Architecture
